@@ -1,6 +1,3 @@
-#!/bin/bash
-
-
 SERIALS_URL="https://docs.google.com/spreadsheets/d/1f7gD115M8TDYstCNVidH4RMpsyeut9LBdhfFej6v-nw/edit?usp=sharing"
 
 
