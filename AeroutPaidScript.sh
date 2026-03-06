@@ -54,7 +54,7 @@ if is_pipe_install; then
         exec "$LOCAL_SCRIPT" "$@"
     else
         echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-        echo -e "\033[1;36m  Welcome to AeroutTweajs Would you like to install it permanently?\033[0m"
+        echo -e "\033[1;36m  Welcome to AeroutTweaks Would you like to install it permanently?\033[0m"
         echo -e "\033[1;37m  This will save the script to $INSTALL_DIR\033[0m"
         echo -e "\033[1;37m  and let you auto update in the future.\033[0m"
         echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
