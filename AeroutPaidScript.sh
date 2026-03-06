@@ -1,5 +1,74 @@
 #!/bin/bash
 
+VERSION="2.2"                       
+INSTALL_DIR="$HOME/.aerout"
+LOCAL_SCRIPT="$INSTALL_DIR/aerout.sh"
+REMOTE_SCRIPT_URL="https://raw.githubusercontent.com/wrealaero/AeroutTweaks/refs/heads/main/AeroutPaidScript.sh"
+REMOTE_VERSION_URL="https://raw.githubusercontent.com/wrealaero/AeroutTweaks/refs/heads/main/version.txt"
+
+is_pipe_install() {
+    [[ ! -f "$0" ]]
+}
+
+do_install() {
+    echo -e "\033[1;36mInstalling Aerout to $INSTALL_DIR ...\033[0m"
+    mkdir -p "$INSTALL_DIR"
+    echo -e "\033[1;33mDownloading latest version...\033[0m"
+    curl -s -o "$LOCAL_SCRIPT" "$REMOTE_SCRIPT_URL"
+    chmod +x "$LOCAL_SCRIPT"
+    echo -e "\033[1;32mInstallation complete! Running Aerout now...\033[0m"
+    exec "$LOCAL_SCRIPT" "$@"
+}
+
+check_for_updates() {
+    if [[ ! -f "$LOCAL_SCRIPT" ]]; then
+        return 0  
+    fi
+
+    remote_version=$(curl -s "$REMOTE_VERSION_URL" | head -1 | tr -d '[:space:]')
+    if [[ -z "$remote_version" ]]; then
+        return 0 
+    fi
+
+    if [[ "$remote_version" != "$VERSION" ]]; then
+        echo -e "\033[1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+        echo -e "\033[1;33m  A new version of Aerout is available!\033[0m"
+        echo -e "\033[1;37m  Current: $VERSION   →   New: $remote_version\033[0m"
+        echo -e "\033[1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+        read -p "Update now? (y/n): " update_choice
+        if [[ "$update_choice" =~ ^[Yy]$ ]]; then
+            echo -e "\033[1;34mDownloading update...\033[0m"
+            cp "$LOCAL_SCRIPT" "$LOCAL_SCRIPT.bak"
+            curl -s -o "$LOCAL_SCRIPT" "$REMOTE_SCRIPT_URL"
+            chmod +x "$LOCAL_SCRIPT"
+            echo -e "\033[1;32mUpdate complete! Restarting...\033[0m"
+            exec "$LOCAL_SCRIPT" "$@"
+        else
+            echo -e "\033[1;33mContinuing with current version.\033[0m"
+        fi
+    fi
+}
+
+if is_pipe_install; then
+    if [[ -f "$LOCAL_SCRIPT" ]]; then
+        exec "$LOCAL_SCRIPT" "$@"
+    else
+        echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+        echo -e "\033[1;36m  Welcome to Aerout! Would you like to install it permanently?\033[0m"
+        echo -e "\033[1;37m  This will save the script to $INSTALL_DIR\033[0m"
+        echo -e "\033[1;37m  and let you auto‑update in the future.\033[0m"
+        echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+        read -p "Install now? (y/n): " install_choice
+        if [[ "$install_choice" =~ ^[Yy]$ ]]; then
+            do_install "$@"
+        else
+            echo -e "\033[1;33mRunning Aerout once (not installed).\033[0m"
+        fi
+    fi
+else
+    check_for_updates "$@"
+fi
+
 type_text() {
   text="$1"
   color="$2"
