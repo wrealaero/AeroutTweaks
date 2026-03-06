@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="2.2"                       
+VERSION="2.3"                       
 INSTALL_DIR="$HOME/.aerout"
 LOCAL_SCRIPT="$INSTALL_DIR/aerout.sh"
 REMOTE_SCRIPT_URL="https://raw.githubusercontent.com/wrealaero/AeroutTweaks/refs/heads/main/AeroutPaidScript.sh"
