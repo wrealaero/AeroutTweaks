@@ -32,7 +32,7 @@ check_for_updates() {
 
     if [[ "$remote_version" != "$VERSION" ]]; then
         echo -e "\033[1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-        echo -e "\033[1;33m  A new version of Aerout is available!\033[0m"
+        echo -e "\033[1;33m  A new version of Aerout is out\033[0m"
         echo -e "\033[1;37m  Current: $VERSION   →   New: $remote_version\033[0m"
         echo -e "\033[1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
         read -p "Update now? (y/n): " update_choice
@@ -54,9 +54,9 @@ if is_pipe_install; then
         exec "$LOCAL_SCRIPT" "$@"
     else
         echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-        echo -e "\033[1;36m  Welcome to Aerout! Would you like to install it permanently?\033[0m"
+        echo -e "\033[1;36m  Welcome to AeroutTweajs Would you like to install it permanently?\033[0m"
         echo -e "\033[1;37m  This will save the script to $INSTALL_DIR\033[0m"
-        echo -e "\033[1;37m  and let you auto‑update in the future.\033[0m"
+        echo -e "\033[1;37m  and let you auto update in the future.\033[0m"
         echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
         read -p "Install now? (y/n): " install_choice
         if [[ "$install_choice" =~ ^[Yy]$ ]]; then
