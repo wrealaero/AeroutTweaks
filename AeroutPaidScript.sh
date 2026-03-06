@@ -51,12 +51,32 @@ check_for_updates() {
 
 if is_pipe_install; then
     if [[ -f "$LOCAL_SCRIPT" ]]; then
+        local_version=$(grep '^VERSION=' "$LOCAL_SCRIPT" | head -1 | cut -d'"' -f2)
+        remote_version=$(curl -s "$REMOTE_VERSION_URL" | head -1 | tr -d '[:space:]')
+
+        if [[ -n "$local_version" && "$local_version" != "$VERSION" ]]; then
+            echo -e "\033[1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+            echo -e "\033[1;33m  A new version of Aerout is available (v$VERSION)\033[0m"
+            echo -e "\033[1;37m  Your installed version: $local_version\033[0m"
+            echo -e "\033[1;33m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+            read -p "Update now? (y/n): " update_choice
+            if [[ "$update_choice" =~ ^[Yy]$ ]]; then
+                echo -e "\033[1;34mDownloading update...\033[0m"
+                cp "$LOCAL_SCRIPT" "$LOCAL_SCRIPT.bak"
+                curl -s -o "$LOCAL_SCRIPT" "$REMOTE_SCRIPT_URL"
+                chmod +x "$LOCAL_SCRIPT"
+                echo -e "\033[1;32mUpdate complete! Restarting...\033[0m"
+                exec "$LOCAL_SCRIPT" "$@"
+            else
+                echo -e "\033[1;33mContinuing with current version.\033[0m"
+            fi
+        fi
         exec "$LOCAL_SCRIPT" "$@"
     else
         echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
-        echo -e "\033[1;36m  Welcome to AeroutTweaks Would you like to install it permanently?\033[0m"
+        echo -e "\033[1;36m  Welcome to AeroutTweaks! Would you like to install it permanently?\033[0m"
         echo -e "\033[1;37m  This will save the script to $INSTALL_DIR\033[0m"
-        echo -e "\033[1;37m  and let you auto update in the future.\033[0m"
+        echo -e "\033[1;37m  and let you auto‑update in the future.\033[0m"
         echo -e "\033[1;36m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
         read -p "Install now? (y/n): " install_choice
         if [[ "$install_choice" =~ ^[Yy]$ ]]; then
@@ -65,8 +85,6 @@ if is_pipe_install; then
             echo -e "\033[1;33mRunning Aerout once (not installed).\033[0m"
         fi
     fi
-else
-    check_for_updates "$@"
 fi
 
 type_text() {
